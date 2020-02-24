@@ -1,5 +1,33 @@
-def list_to_csv(lsts):
+def lists_to_csv(lsts):
     csv_strings = []
     for lst in lsts:
         csv_strings.append(','.join(str(x) for x in lst))
     return '\n'.join(csv_strings)
+
+
+def dicts_to_csv(*dicts, **kwargs):
+    if not dicts:
+        return ''
+
+    dicts = list(dicts)
+    keys = dicts[0].keys()
+
+    for dic in dicts:
+        assert dic.keys() == keys, 'All dictionaries should have matching keys'
+
+    lsts = []
+
+    if 'sort_key' in kwargs:
+        sort_key = kwargs['sort_key']
+    else:
+        sort_key = None
+
+    sorted_keys = sorted(keys, key=sort_key)
+
+    for key in sorted_keys:
+        row = [key]
+        for dic in dicts:
+            row.append(dic[key])
+        lsts.append(row)
+
+    return lists_to_csv(lsts)
